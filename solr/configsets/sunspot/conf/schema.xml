@@ -59,14 +59,14 @@
     <!-- *** This fieldType is used by Sunspot! *** -->
     <fieldType name="rand" class="solr.RandomSortField" omitNorms="true"/>
     <!-- *** This fieldType is used by Sunspot! *** -->
-    <fieldType name="text" class="solr.TextField" omitNorms="false">
+    <!-- <fieldType name="text" class="solr.TextField" omitNorms="false">
       <analyzer>
         <tokenizer class="solr.StandardTokenizerFactory"/>
         <filter class="solr.StandardFilterFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
         <filter class="solr.PorterStemFilterFactory"/>
       </analyzer>
-    </fieldType>
+    </fieldType> -->
     <!-- *** This fieldType is used by Sunspot! *** -->
     <fieldType name="boolean" class="solr.BoolField" omitNorms="true"/>
     <!-- *** This fieldType is used by Sunspot! *** -->
@@ -87,21 +87,21 @@
          all spelling suggestions will be lower case (without it,
          though, you'd have duplicate suggestions for lower and proper
          cased words). -->
-    <fieldType name="textSpell" class="solr.TextField" positionIncrementGap="100" omitNorms="true">
-      <analyzer>
+    <fieldType name="text" class="solr.TextField" omitNorms="false">
+      <analyzer type="index">
         <tokenizer class="solr.StandardTokenizerFactory"/>
+        <!-- <filter class="solr.StopFilterFactory" words="stopwords.txt"/> -->
         <filter class="solr.StandardFilterFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
-      </analyzer>
-    </fieldType>
-
-    <fieldType name="text_general_edge_ngram" class="solr.TextField" positionIncrementGap="100">
-      <analyzer type="index">
-        <tokenizer class="solr.LowerCaseTokenizerFactory"/>
+        <filter class="solr.PorterStemFilterFactory"/>
         <filter class="solr.EdgeNGramFilterFactory" minGramSize="2" maxGramSize="15"/>
       </analyzer>
       <analyzer type="query">
-        <tokenizer class="solr.LowerCaseTokenizerFactory"/>
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <!-- <filter class="solr.StopFilterFactory" words="stopwords.txt"/> -->
+        <filter class="solr.StandardFilterFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.PorterStemFilterFactory"/>
       </analyzer>
     </fieldType>
     <!-- A specialized field for geospatial search. If indexed, this fieldType must not be multivalued. -->
@@ -262,7 +262,7 @@
     <dynamicField name="*_llm" stored="false" type="location" multiValued="true" indexed="true"/>
     <dynamicField name="*_lls" stored="true" type="location" multiValued="false" indexed="true"/>
     <dynamicField name="*_llms" stored="true" type="location" multiValued="true" indexed="true"/>
-    <field name="textSpell" stored="false" type="textSpell" multiValued="true" indexed="true"/>
+    <!-- <field name="textSpell" stored="false" type="textSpell" multiValued="true" indexed="true"/> -->
     
     <!-- required by Solr 5 -->
     <field name="_version_" type="tlong" indexed="true" stored="true" multiValued="false" />
@@ -283,6 +283,6 @@
 
   <!-- Use copyField to copy the fields you want to run spell checking
        on into one field. For example: -->
-  <copyField source="*_text"  dest="textSpell" />
-  <copyField source="*_s"  dest="textSpell" />
+  <!-- <copyField source="*_text"  dest="textSpell" />
+  <copyField source="*_s"  dest="textSpell" /> -->
 </schema>
